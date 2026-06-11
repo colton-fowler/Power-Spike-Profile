@@ -1,0 +1,87 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-display: 'Orbitron', system-ui, sans-serif;
+  --font-body: 'Rajdhani', system-ui, sans-serif;
+  --color-void: #070b14;
+  --color-panel: #0d1524;
+  --color-panel-border: #1e3a5f;
+  --color-cyan-glow: #22d3ee;
+  --color-gold-glow: #fbbf24;
+  --color-spike: #a855f7;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  min-height: 100vh;
+  margin: 0;
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-void);
+  color: #e2e8f0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.font-display {
+  font-family: var(--font-display);
+}
+
+.bg-grid {
+  background-image:
+    linear-gradient(rgba(34, 211, 238, 0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(34, 211, 238, 0.03) 1px, transparent 1px);
+  background-size: 48px 48px;
+}
+
+.panel-glow {
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.12),
+    0 8px 32px rgba(0, 0, 0, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.04);
+}
+
+.star-marker {
+  filter: drop-shadow(0 0 6px rgba(251, 191, 36, 0.9));
+}
+
+.star-marker-peak {
+  filter: drop-shadow(0 0 12px rgba(251, 191, 36, 1))
+    drop-shadow(0 0 24px rgba(168, 85, 247, 0.8));
+}
+
+.investment-fill-weak {
+  background: linear-gradient(90deg, #334155 0%, #475569 100%);
+}
+
+.investment-fill-playable {
+  background: linear-gradient(90deg, #0e7490 0%, #22d3ee 100%);
+}
+
+.investment-fill-strong {
+  background: linear-gradient(90deg, #7c3aed 0%, #a855f7 100%);
+}
+
+.investment-fill-spike {
+  background: linear-gradient(90deg, #d97706 0%, #fbbf24 50%, #fde68a 100%);
+}
+
+@keyframes pulse-glow {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
