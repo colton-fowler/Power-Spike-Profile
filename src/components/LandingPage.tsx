@@ -7,7 +7,7 @@ import { HowToModal } from './HowToModal'
 interface LandingPageProps {
   jsonInput: string
   onJsonChange: (value: string) => void
-  onRender: () => void
+  onRender: () => boolean
   onGenerateSample: () => void
   presetId: PresetId
   onPresetChange: (id: PresetId) => void
@@ -24,7 +24,7 @@ export function LandingPage({
   error,
 }: LandingPageProps) {
   const [modalOpen, setModalOpen] = useState(false)
-  const [scrollToPrompt, setScrollToPrompt] = useState(false)
+  const [wizardInitialStep, setWizardInitialStep] = useState<1 | 2>(1)
   const [highlightJsonInput, setHighlightJsonInput] = useState(false)
   const [showPasteHint, setShowPasteHint] = useState(false)
   const jsonInputSectionRef = useRef<HTMLDivElement>(null)
@@ -43,33 +43,19 @@ export function LandingPage({
   }, [showPasteHint])
 
   const openHelpModal = () => {
-    setScrollToPrompt(false)
+    setWizardInitialStep(1)
     setModalOpen(true)
   }
 
   const openPresetModal = (id: PresetId) => {
     onPresetChange(id)
-    setScrollToPrompt(true)
+    setWizardInitialStep(2)
     setModalOpen(true)
   }
 
   const handleCloseModal = () => {
     setModalOpen(false)
-    setScrollToPrompt(false)
-  }
-
-  const focusJsonInput = () => {
-    window.setTimeout(() => {
-      jsonInputSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
-      textareaRef.current?.focus()
-      setHighlightJsonInput(true)
-      setShowPasteHint(true)
-    }, 150)
-  }
-
-  const handleGeneratedProfile = () => {
-    handleCloseModal()
-    focusJsonInput()
+    setWizardInitialStep(1)
   }
 
   return (
@@ -93,7 +79,7 @@ export function LandingPage({
             How Power Spike Profiles Work
           </Button>
           <Button variant="secondary" onClick={onGenerateSample}>
-            Generate Sample
+            Use Example Profile
           </Button>
         </div>
 
@@ -163,7 +149,7 @@ export function LandingPage({
 
           <div className="mt-5 flex justify-center">
             <Button onClick={onRender} className="min-w-[180px]">
-              Render Profile
+              Build My Profile
             </Button>
           </div>
         </div>
@@ -178,9 +164,12 @@ export function LandingPage({
         onClose={handleCloseModal}
         presetId={presetId}
         onPresetChange={onPresetChange}
-        scrollToPrompt={scrollToPrompt}
+        initialStep={wizardInitialStep}
+        jsonInput={jsonInput}
+        onJsonChange={onJsonChange}
+        onRender={onRender}
         onGenerateSample={onGenerateSample}
-        onGeneratedProfile={handleGeneratedProfile}
+        error={error}
       />
     </>
   )

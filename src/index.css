@@ -191,6 +191,51 @@ body {
   animation: pulse-glow 2.5s ease-in-out infinite;
 }
 
+@keyframes wizard-step-forward {
+  from {
+    opacity: 0;
+    transform: translateX(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes wizard-step-back {
+  from {
+    opacity: 0;
+    transform: translateX(-14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+.wizard-step-forward {
+  animation: wizard-step-forward 200ms ease-out;
+}
+
+.wizard-step-back {
+  animation: wizard-step-back 200ms ease-out;
+}
+
+@keyframes profile-render-success-in {
+  from {
+    opacity: 0;
+    transform: scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+.profile-render-success {
+  animation: profile-render-success-in 280ms ease-out;
+}
+
 .codex-modal {
   box-shadow:
     0 0 0 1px rgba(34, 211, 238, 0.2),

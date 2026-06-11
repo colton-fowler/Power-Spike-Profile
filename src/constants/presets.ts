@@ -741,31 +741,6 @@ export function getPresetById(id: PresetId): ProfilePreset {
   return PROFILE_PRESETS.find((preset) => preset.id === id) ?? PROFILE_PRESETS[0]
 }
 
-export const QUICK_START_STEPS = [
-  { label: 'Open ChatGPT', short: '1' },
-  { label: 'Copy Prompt', short: '2' },
-  { label: 'Paste JSON', short: '3' },
-  { label: 'Render Chart', short: '4' },
-] as const
-
-export const ONBOARDING_STEPS = [
-  {
-    number: 1,
-    label: 'Pick a build',
-    description: 'Choose the playstyle that best matches you.',
-  },
-  {
-    number: 2,
-    label: 'Copy prompt to ChatGPT',
-    description: 'Paste the prompt and wait for ChatGPT to reply with JSON.',
-  },
-  {
-    number: 3,
-    label: 'Paste JSON here',
-    description: 'Copy ChatGPT\u2019s JSON response back into the main page.',
-  },
-] as const
-
 export const SPIKE_TIER_LADDER = [
   { range: '0–24', label: 'Unbuilt', tone: 'unbuilt' },
   { range: '25–49', label: 'Early Investment', tone: 'early' },
