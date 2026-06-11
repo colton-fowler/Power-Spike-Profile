@@ -16,6 +16,7 @@ export interface ProfilePreset {
   landingLabel: string
   promptTitle: string
   goal: string
+  tag: string
   focus: string[]
   accent: string
   prompt: string
@@ -508,6 +509,7 @@ export const PROFILE_PRESETS: ProfilePreset[] = [
     landingLabel: 'Analyze Me',
     promptTitle: 'Balanced Profile Prompt',
     goal: 'General assessment across all life areas.',
+    tag: 'GENERAL',
     focus: [
       'discipline',
       'confidence',
@@ -545,6 +547,7 @@ export const PROFILE_PRESETS: ProfilePreset[] = [
     landingLabel: 'Brutally Honest',
     promptTitle: 'Brutally Honest Prompt',
     goal: 'Prioritize weaknesses and bottlenecks.',
+    tag: 'AUDIT',
     focus: [
       'Be harsher than normal',
       'Avoid inflated scores',
@@ -586,6 +589,7 @@ export const PROFILE_PRESETS: ProfilePreset[] = [
     landingLabel: 'Dating & Social',
     promptTitle: 'Dating & Social Prompt',
     goal: 'Evaluate dating and social performance.',
+    tag: 'SOCIAL',
     focus: [
       'Confidence',
       'Social Calibration',
@@ -621,6 +625,7 @@ export const PROFILE_PRESETS: ProfilePreset[] = [
     landingLabel: 'Career & Achievement',
     promptTitle: 'Career & Achievement Prompt',
     goal: 'Evaluate work performance and achievement potential.',
+    tag: 'CAREER',
     focus: [
       'Discipline',
       'Execution',
@@ -658,6 +663,7 @@ export const PROFILE_PRESETS: ProfilePreset[] = [
     landingLabel: 'Mental Game',
     promptTitle: 'Mental Game Prompt',
     goal: 'Evaluate internal strength.',
+    tag: 'MENTAL',
     focus: [
       'Emotional Control',
       'Resilience',
@@ -693,6 +699,7 @@ export const PROFILE_PRESETS: ProfilePreset[] = [
     landingLabel: 'Gamer Build',
     promptTitle: 'Gamer Build Prompt',
     goal: 'Treat the person like an RPG character.',
+    tag: 'RPG',
     focus: [
       'Mechanics',
       'Strategy',
@@ -735,18 +742,18 @@ export function getPresetById(id: PresetId): ProfilePreset {
 }
 
 export const QUICK_START_STEPS = [
-  'Open ChatGPT',
-  'Paste the profile prompt',
-  'Copy the JSON response',
-  'Paste it into Power Spike Profile',
-  'Render your build',
+  { label: 'ChatGPT', short: 'Open' },
+  { label: 'Generate Profile', short: 'Prompt' },
+  { label: 'Copy JSON', short: 'Copy' },
+  { label: 'Paste Here', short: 'Paste' },
+  { label: 'Render Build', short: 'Render' },
 ] as const
 
 export const SPIKE_TIER_LADDER = [
   { range: '0–24', label: 'Unbuilt', tone: 'unbuilt' },
   { range: '25–49', label: 'Early Investment', tone: 'early' },
-  { range: '50–74', label: 'Stable Baseline', tone: 'stable' },
-  { range: '75–84', label: 'High ROI / Near Spike', tone: 'presike' },
-  { range: '85–89', label: '★ Power Spike Online', tone: 'spike' },
+  { range: '50–74', label: 'Stable', tone: 'stable' },
+  { range: '75–84', label: 'High ROI', tone: 'presike' },
+  { range: '85–89', label: '★ Spike Hit', tone: 'spike' },
   { range: '90–100', label: 'Marginal Gains', tone: 'marginal' },
 ] as const
