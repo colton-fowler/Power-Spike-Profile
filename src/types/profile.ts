@@ -4,6 +4,7 @@ export interface Stat {
   category: string
   comment: string
   tip: string
+  investmentRead: string
 }
 
 export interface PowerSpikeProfile {
@@ -14,10 +15,27 @@ export interface PowerSpikeProfile {
 }
 
 export type SpikeStatus =
-  | 'Spike Hit'
-  | 'Near Major Spike'
-  | 'Stable Investment'
-  | 'Needs Investment'
-  | 'Underinvested'
+  | 'Marginal Gains'
+  | 'Power Spike Online'
+  | 'Pre-Spike / High ROI'
+  | 'Stable Baseline'
+  | 'Early Investment'
+  | 'Unbuilt'
 
-export type VisualTier = 'weak' | 'playable' | 'strong' | 'spike'
+export type UpgradeTierId =
+  | 'small-gain'
+  | 'baseline'
+  | 'stable'
+  | 'spike-tier'
+  | 'power-spike'
+  | 'marginal-gains'
+
+export interface UpgradeTier {
+  id: UpgradeTierId
+  label: string
+  range: string
+  min: number
+  max: number
+}
+
+export type ChartView = 'board' | 'detailed'

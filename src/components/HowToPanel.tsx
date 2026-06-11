@@ -1,5 +1,10 @@
 import { useEffect, useState } from 'react'
-import { CHATGPT_PROMPT, HOW_TO_INSTRUCTIONS, JSON_EXAMPLE } from '../constants/prompt'
+import {
+  CHATGPT_PROMPT,
+  HOW_TO_INSTRUCTIONS,
+  JSON_EXAMPLE,
+  SPIKE_CONCEPT_LABELS,
+} from '../constants/prompt'
 import { copyToClipboard } from '../utils/export'
 import { Button } from './Button'
 
@@ -69,6 +74,21 @@ export function HowToPanel({ open, onClose }: HowToPanelProps) {
 
         <div className="flex-1 overflow-y-auto px-5 py-5">
           <p className="text-sm leading-relaxed text-slate-300">{HOW_TO_INSTRUCTIONS}</p>
+
+          <div className="mt-5 space-y-2">
+            <p className="text-xs font-semibold uppercase tracking-wider text-cyan-400/70">
+              Investment Spike Concept
+            </p>
+            {SPIKE_CONCEPT_LABELS.map((item) => (
+              <div
+                key={item.label}
+                className="rounded border border-slate-700/50 bg-slate-900/50 px-3 py-2"
+              >
+                <p className="text-xs font-semibold text-slate-200">{item.label}</p>
+                <p className="mt-0.5 text-xs text-slate-500">{item.description}</p>
+              </div>
+            ))}
+          </div>
 
           <div className="mt-5 flex flex-wrap gap-2">
             <Button variant="secondary" onClick={handleCopyPrompt}>

@@ -30,8 +30,9 @@ export function LandingPage({
             Power Spike Profile
           </h1>
           <p className="mx-auto mt-4 max-w-xl text-base leading-relaxed text-slate-400">
-            Paste a structured JSON profile from ChatGPT and convert it into a game-style
-            investment spike chart — stats, power spikes, weak lanes, and blunt improvement tips.
+            Paste a structured JSON profile from ChatGPT and convert it into a Deadlock-style
+            upgrade board — vertical spike tiers, ROI reads, power spike stars, and blunt
+            improvement tips.
           </p>
         </header>
 

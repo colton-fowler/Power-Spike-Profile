@@ -1,4 +1,5 @@
 import type { PowerSpikeProfile, Stat } from '../types/profile'
+import { generateInvestmentRead } from './spikeLogic'
 
 export interface ValidationResult {
   valid: boolean
@@ -15,7 +16,7 @@ function parseStat(value: unknown, index: number): Stat | string {
     return `Stat at index ${index} must be an object.`
   }
 
-  const { name, score, category, comment, tip } = value
+  const { name, score, category, comment, tip, investmentRead } = value
 
   if (typeof name !== 'string' || !name.trim()) {
     return `Stat at index ${index}: "name" must be a non-empty string.`
@@ -36,12 +37,23 @@ function parseStat(value: unknown, index: number): Stat | string {
     return `Stat at index ${index}: "score" must be between 0 and 100.`
   }
 
+  if (
+    investmentRead !== undefined &&
+    (typeof investmentRead !== 'string' || !investmentRead.trim())
+  ) {
+    return `Stat at index ${index}: "investmentRead" must be a non-empty string when provided.`
+  }
+
   return {
     name: name.trim(),
     score,
     category: category.trim(),
     comment: comment.trim(),
     tip: tip.trim(),
+    investmentRead:
+      typeof investmentRead === 'string' && investmentRead.trim()
+        ? investmentRead.trim()
+        : generateInvestmentRead(score),
   }
 }
 

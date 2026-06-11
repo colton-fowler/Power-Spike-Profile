@@ -59,6 +59,10 @@ export function StatRow({ stat, isPeak }: StatRowProps) {
       </div>
 
       <div className="mt-4 space-y-2 border-t border-slate-700/50 pt-4">
+        <p className="text-sm leading-relaxed text-orange-200/80">
+          <span className="font-semibold text-orange-400/80">Investment Read: </span>
+          {stat.investmentRead}
+        </p>
         <p className="text-sm leading-relaxed text-slate-300">
           <span className="font-semibold text-slate-400">Comment: </span>
           {stat.comment}

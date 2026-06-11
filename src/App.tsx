@@ -39,7 +39,7 @@ function App() {
   }
 
   return (
-    <div className="bg-grid min-h-screen bg-gradient-to-b from-[#070b14] via-[#0a1020] to-[#070b14]">
+    <div className="game-menu-bg bg-grid relative min-h-screen bg-gradient-to-b from-[#070b14] via-[#0a1020] to-[#070b14]">
       {view === 'landing' && (
         <LandingPage
           jsonInput={jsonInput}

@@ -1,6 +1,8 @@
 import type { PowerSpikeProfile } from '../types/profile'
 import {
-  findBestInvestmentTarget,
+  countPowerSpikesOnline,
+  findBestHighRoiInvestment,
+  findMarginalGainsStats,
   findStrongestStat,
   findWeakestStat,
 } from '../utils/spikeLogic'
@@ -12,8 +14,9 @@ interface SummaryPanelProps {
 export function SummaryPanel({ profile }: SummaryPanelProps) {
   const strongest = findStrongestStat(profile.stats)
   const weakest = findWeakestStat(profile.stats)
-  const nextInvest = findBestInvestmentTarget(profile.stats)
-  const spikeCount = profile.stats.filter((s) => s.score >= 85).length
+  const bestRoi = findBestHighRoiInvestment(profile.stats)
+  const marginalStats = findMarginalGainsStats(profile.stats)
+  const spikeCount = countPowerSpikesOnline(profile.stats)
 
   return (
     <aside className="panel-glow rounded-lg border border-cyan-800/30 bg-gradient-to-br from-slate-900/95 via-slate-950/95 to-purple-950/30 p-5 sm:p-6">
@@ -29,7 +32,24 @@ export function SummaryPanel({ profile }: SummaryPanelProps) {
 
       <p className="mt-4 text-sm leading-relaxed text-slate-300">{profile.summary}</p>
 
-      <div className="mt-6 grid gap-3 sm:grid-cols-2">
+      <div className="mt-4 grid grid-cols-2 gap-2">
+        <div className="rounded-lg border border-amber-600/30 bg-amber-950/20 p-3">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-amber-400/80">
+            Power Spikes Online
+          </p>
+          <p className="mt-1 font-display text-2xl font-bold text-amber-200">{spikeCount}</p>
+        </div>
+        <div className="rounded-lg border border-cyan-600/30 bg-cyan-950/20 p-3">
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-cyan-400/80">
+            Marginal Gains
+          </p>
+          <p className="mt-1 font-display text-2xl font-bold text-cyan-200">
+            {marginalStats.length}
+          </p>
+        </div>
+      </div>
+
+      <div className="mt-4 grid gap-3 sm:grid-cols-2">
         <SummaryCard
           label="Biggest Strength"
           value={strongest?.name ?? '—'}
@@ -46,22 +66,36 @@ export function SummaryPanel({ profile }: SummaryPanelProps) {
 
       <div className="mt-3 rounded-lg border border-purple-500/30 bg-purple-950/30 p-4">
         <p className="text-xs font-semibold uppercase tracking-wider text-purple-300/80">
-          Best Stat to Invest In Next
+          Best High-ROI Investment
         </p>
         <p className="mt-1 font-display text-lg font-semibold text-purple-100">
-          {nextInvest?.name ?? '—'}
+          {bestRoi?.name ?? '—'}
         </p>
-        {nextInvest && (
+        {bestRoi && (
           <p className="mt-1 text-sm text-slate-400">
-            Currently at {nextInvest.score}/100 — highest ROI upgrade path.
+            {bestRoi.score}/100 — {bestRoi.investmentRead}
           </p>
         )}
       </div>
 
+      {marginalStats.length > 0 && (
+        <div className="mt-3 rounded-lg border border-cyan-700/30 bg-cyan-950/20 p-4">
+          <p className="text-xs font-semibold uppercase tracking-wider text-cyan-400/70">
+            Overinvested / Marginal Gains
+          </p>
+          <p className="mt-1 text-sm text-cyan-100/90">
+            {marginalStats.map((s) => `${s.name} (${s.score})`).join(', ')}
+          </p>
+          <p className="mt-1 text-xs text-slate-500">
+            Already spiked — shift investment to pre-spike lanes.
+          </p>
+        </div>
+      )}
+
       <p className="mt-4 text-xs text-slate-500">
         {spikeCount > 0
-          ? `${spikeCount} power spike${spikeCount > 1 ? 's' : ''} online. Do not get cocky on the rest.`
-          : 'No power spikes yet. Farm the fundamentals.'}
+          ? `${spikeCount} spike${spikeCount > 1 ? 's' : ''} online. Farm the 75–84 window before over-maxing spiked stats.`
+          : 'No power spikes yet. Hunt the 75–84 pre-spike tier.'}
       </p>
     </aside>
   )
