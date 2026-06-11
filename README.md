@@ -4,7 +4,7 @@ A Deadlock-inspired self-analysis tool that converts ChatGPT-generated JSON prof
 
 ## Live Demo
 
-https://YOUR-VERCEL-URL.vercel.app
+https://power-spike-profile.vercel.app/
 
 Power Spike Profile helps users identify strengths, weak lanes, power spikes, and the highest-ROI stats to invest in next.
 
