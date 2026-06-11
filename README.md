@@ -4,7 +4,7 @@ A Deadlock-inspired self-analysis tool that converts ChatGPT-generated JSON prof
 
 Power Spike Profile helps users identify strengths, weak lanes, power spikes, and the highest-ROI stats to invest in next.
 
-![Power Spike Profile Preview](./screenshots/power-spike-colton.png)
+![Power Spike Profile Preview](./screenshots/power-spike-example.png)
 
 ## Features
 
