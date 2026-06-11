@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react'
+import { flushSync } from 'react-dom'
 import type { ChartView, PowerSpikeProfile } from '../types/profile'
 import { buildShareableSummary, copyToClipboard, downloadChartPng } from '../utils/export'
 import { findPeakStatIndex } from '../utils/spikeLogic'
@@ -23,15 +24,32 @@ export function ProfilePage({ profile, onBack }: ProfilePageProps) {
   const peakIndex = findPeakStatIndex(profile.stats)
 
   const handleDownloadPng = async () => {
-    if (!exportRef.current) return
     setExporting(true)
     setExportError(null)
+
+    const previousView = view
     try {
+      if (view !== 'board') {
+        flushSync(() => setView('board'))
+      }
+
+      await new Promise<void>((resolve) => {
+        requestAnimationFrame(() => requestAnimationFrame(() => resolve()))
+      })
+
+      const exportNode = exportRef.current
+      if (!exportNode) {
+        throw new Error('Export node is not mounted')
+      }
+
       const safeName = profile.profileName.replace(/[^a-z0-9]/gi, '-').toLowerCase()
-      await downloadChartPng(exportRef.current, `power-spike-${safeName}.png`)
+      await downloadChartPng(exportNode, `power-spike-${safeName}.png`)
     } catch {
       setExportError('PNG export failed. Try again or use copy summary instead.')
     } finally {
+      if (previousView !== 'board') {
+        setView(previousView)
+      }
       setExporting(false)
     }
   }
@@ -65,7 +83,11 @@ export function ProfilePage({ profile, onBack }: ProfilePageProps) {
         </p>
       )}
 
-      <div className="relative z-10 rounded-xl border border-slate-700/40 bg-slate-950/70 p-4 backdrop-blur-md sm:p-6">
+      <div
+        ref={exportRef}
+        data-export-root
+        className="relative z-10 rounded-xl border border-slate-700/40 bg-slate-950/70 p-4 backdrop-blur-md sm:p-6"
+      >
         <div className="mb-6 flex flex-wrap items-end justify-between gap-4">
           <div>
             <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-400/60">
@@ -99,30 +121,6 @@ export function ProfilePage({ profile, onBack }: ProfilePageProps) {
         </div>
 
         <p className="mt-6 text-center text-xs text-slate-600">
-          This is a reflective tool, not a clinical assessment.
-        </p>
-      </div>
-
-      {/* Hidden export target — always renders Upgrade Board */}
-      <div
-        ref={exportRef}
-        aria-hidden="true"
-        className="pointer-events-none fixed top-0 -left-[10000px] w-[1200px] rounded-xl border border-slate-700/40 bg-[#070b14] p-6"
-      >
-        <div className="mb-4">
-          <p className="text-xs font-semibold uppercase tracking-[0.3em] text-cyan-400/60">
-            Power Spike Profile
-          </p>
-          <h2 className="font-display mt-1 text-2xl font-bold text-white">
-            {profile.profileName} — Upgrade Board
-          </h2>
-          <p className="mt-1 text-sm text-amber-300/90">{profile.archetype}</p>
-        </div>
-        <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_280px]">
-          <UpgradeBoard stats={profile.stats} compact />
-          <SummaryPanel profile={profile} />
-        </div>
-        <p className="mt-4 text-center text-xs text-slate-600">
           This is a reflective tool, not a clinical assessment.
         </p>
       </div>
