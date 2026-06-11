@@ -58,9 +58,14 @@ body {
   pointer-events: none;
 }
 
-.game-menu-bg > * {
+.game-menu-bg > *:not(.modal-root) {
   position: relative;
   z-index: 1;
+}
+
+.game-menu-bg > .modal-root {
+  position: fixed;
+  z-index: 50;
 }
 
 .panel-glow {
@@ -184,4 +189,12 @@ body {
 
 .animate-pulse-glow {
   animation: pulse-glow 2.5s ease-in-out infinite;
+}
+
+.codex-modal {
+  box-shadow:
+    0 0 0 1px rgba(34, 211, 238, 0.2),
+    0 0 80px rgba(34, 211, 238, 0.08),
+    0 24px 64px rgba(0, 0, 0, 0.6),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import type { PowerSpikeProfile } from './types/profile'
 import { LandingPage } from './components/LandingPage'
 import { ProfilePage } from './components/ProfilePage'
+import { useProfilePreset } from './hooks/useProfilePreset'
 import { getSampleJson } from './utils/sampleProfile'
 import { validateProfileJson } from './utils/validateProfile'
 
@@ -12,6 +13,7 @@ function App() {
   const [jsonInput, setJsonInput] = useState('')
   const [profile, setProfile] = useState<PowerSpikeProfile | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const { presetId, setPresetId } = useProfilePreset()
 
   const handleJsonChange = (value: string) => {
     setJsonInput(value)
@@ -30,7 +32,7 @@ function App() {
   }
 
   const handleGenerateSample = () => {
-    setJsonInput(getSampleJson())
+    setJsonInput(getSampleJson(presetId))
     setError(null)
   }
 
@@ -46,6 +48,8 @@ function App() {
           onJsonChange={handleJsonChange}
           onRender={handleRender}
           onGenerateSample={handleGenerateSample}
+          presetId={presetId}
+          onPresetChange={setPresetId}
           error={error}
         />
       )}
