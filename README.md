@@ -2,6 +2,10 @@
 
 A Deadlock-inspired self-analysis tool that converts ChatGPT-generated JSON profiles into visual upgrade boards.
 
+## Live Demo
+
+https://YOUR-VERCEL-URL.vercel.app
+
 Power Spike Profile helps users identify strengths, weak lanes, power spikes, and the highest-ROI stats to invest in next.
 
 ![Power Spike Profile Preview](./screenshots/power-spike-example.png)
@@ -12,7 +16,7 @@ Power Spike Profile helps users identify strengths, weak lanes, power spikes, an
 * Investment spike progression system
 * Power spike stars at major stat breakpoints
 * High-ROI stat recommendations
-* Build presets:
+* Multiple profile builds:
 
   * Analyze Me
   * Brutally Honest
@@ -20,34 +24,64 @@ Power Spike Profile helps users identify strengths, weak lanes, power spikes, an
   * Career & Achievement
   * Mental Game
   * Gamer Build
-* Game Codex onboarding modal
+* Guided Game Codex onboarding flow
 * Copyable ChatGPT prompts
-* JSON validation
+* JSON validation and parsing
 * PNG chart export
-* Shareable text summary
+* Shareable profile summaries
 
 ## How It Works
 
 1. Choose a build preset.
 2. Copy the generated ChatGPT prompt.
 3. Paste it into ChatGPT.
-4. Copy the JSON response.
+4. Generate a profile JSON.
 5. Paste the JSON into Power Spike Profile.
 6. Render your upgrade board.
-7. Download the chart as a PNG or copy a shareable summary.
+7. Download the chart or share the summary.
 
 ## Investment Spike System
 
-|  Score | Tier                  | Meaning                              |
-| -----: | --------------------- | ------------------------------------ |
-|   0–24 | Unbuilt               | Weak or undeveloped stat             |
-|  25–49 | Early Investment      | Inconsistent and needs work          |
-|  50–74 | Stable Baseline       | Usable but not a major strength      |
-|  75–84 | High ROI / Near Spike | Best zone for noticeable improvement |
-|  85–89 | Power Spike Online    | Major upgrade is unlocked            |
-| 90–100 | Marginal Gains        | Still useful, but smaller returns    |
+| Score  | Tier                  | Meaning                                        |
+| ------ | --------------------- | ---------------------------------------------- |
+| 0–24   | Unbuilt               | Weak or undeveloped stat                       |
+| 25–49  | Early Investment      | Inconsistent and needs work                    |
+| 50–74  | Stable Baseline       | Usable but not a major strength                |
+| 75–84  | High ROI / Near Spike | Best zone for noticeable improvement           |
+| 85–89  | Power Spike Online    | Major upgrade unlocked                         |
+| 90–100 | Marginal Gains        | Additional improvement has diminishing returns |
 
-The star represents the moment a stat hits its power spike. Before the star, investment creates big noticeable improvements. After the star, improvement still helps, but the gains become smaller.
+The star represents the point where a stat reaches its major power spike.
+
+Before the star, investment produces large visible improvements.
+
+After the star, gains continue, but at a slower rate.
+
+## Example Builds
+
+### Analyze Me
+
+General assessment across all life areas.
+
+### Brutally Honest
+
+Prioritizes weaknesses, blind spots, and bottlenecks.
+
+### Dating & Social
+
+Evaluates confidence, attraction, communication, charisma, emotional control, and dating execution.
+
+### Career & Achievement
+
+Evaluates discipline, focus, consistency, leadership, reliability, and execution.
+
+### Mental Game
+
+Evaluates resilience, patience, emotional control, self-awareness, and recovery.
+
+### Gamer Build
+
+Treats the user like an RPG character with stats such as mechanics, strategy, adaptability, learning rate, and leadership.
 
 ## Tech Stack
 
@@ -129,73 +163,44 @@ src/
 
 This is a reflective tool, not a clinical assessment.
 
-The app does not diagnose, evaluate mental health, or claim objective psychological accuracy. It is meant to visualize self-reflection and feedback in a game-inspired format.
+The app does not diagnose, evaluate mental health, or claim objective psychological accuracy. It is designed to visualize self-reflection, strengths, weaknesses, and growth opportunities through a game-inspired progression system.
 
-## React + TypeScript + Vite
+## Development Notes
 
-This project was built with React, TypeScript, and Vite.
+This project was built with:
 
-Vite provides a minimal setup for React with fast HMR and production builds.
+* React
+* TypeScript
+* Vite
 
-Currently, two official React plugins are available:
+Vite provides fast development builds, hot module replacement (HMR), and optimized production output.
 
-* [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-* [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs)
+If extending the project further, consider:
 
-## Expanding the ESLint Configuration
+* Type-aware ESLint rules
+* Automated testing
+* Profile sharing
+* Public profile pages
+* Historical profile tracking
+* Side-by-side profile comparisons
 
-If you are developing this into a larger production application, consider enabling type-aware lint rules:
+## Roadmap
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+### v0.3.0
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+* Shareable profile links
+* Public profile pages
+* Profile cards
+* Social sharing
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
-])
-```
+### v0.4.0
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+* Profile history
+* Progress tracking
+* Compare two profiles
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### v0.5.0
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      reactX.configs['recommended-typescript'],
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-    },
-  },
-])
-```
+* AI-generated improvement paths
+* Dynamic investment recommendations
+* Personalized progression systems
