@@ -55,7 +55,7 @@ export function BuildSelectCard({
     <button
       type="button"
       onClick={onClick}
-      className={`group w-full rounded-lg border bg-gradient-to-br from-slate-900/90 to-slate-950/90 text-left transition-all duration-200 ${accentClass} ${padding}`}
+      className={`group w-full cursor-pointer rounded-lg border bg-gradient-to-br from-slate-900/90 to-slate-950/90 text-left transition-all duration-200 ${accentClass} ${padding}`}
     >
       <div className="flex items-start justify-between gap-2">
         <p

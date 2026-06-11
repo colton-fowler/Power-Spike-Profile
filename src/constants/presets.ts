@@ -742,11 +742,28 @@ export function getPresetById(id: PresetId): ProfilePreset {
 }
 
 export const QUICK_START_STEPS = [
-  { label: 'ChatGPT', short: 'Open' },
-  { label: 'Generate Profile', short: 'Prompt' },
-  { label: 'Copy JSON', short: 'Copy' },
-  { label: 'Paste Here', short: 'Paste' },
-  { label: 'Render Build', short: 'Render' },
+  { label: 'Open ChatGPT', short: '1' },
+  { label: 'Copy Prompt', short: '2' },
+  { label: 'Paste JSON', short: '3' },
+  { label: 'Render Chart', short: '4' },
+] as const
+
+export const ONBOARDING_STEPS = [
+  {
+    number: 1,
+    label: 'Pick a build',
+    description: 'Choose the playstyle that best matches you.',
+  },
+  {
+    number: 2,
+    label: 'Copy prompt to ChatGPT',
+    description: 'Paste the prompt and wait for ChatGPT to reply with JSON.',
+  },
+  {
+    number: 3,
+    label: 'Paste JSON here',
+    description: 'Copy ChatGPT\u2019s JSON response back into the main page.',
+  },
 ] as const
 
 export const SPIKE_TIER_LADDER = [
