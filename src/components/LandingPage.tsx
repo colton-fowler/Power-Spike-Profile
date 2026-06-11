@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { PROFILE_PRESETS, type PresetId } from '../constants/presets'
 import { BuildSelectCard } from './BuildSelectCard'
 import { Button } from './Button'
@@ -25,6 +25,22 @@ export function LandingPage({
 }: LandingPageProps) {
   const [modalOpen, setModalOpen] = useState(false)
   const [scrollToPrompt, setScrollToPrompt] = useState(false)
+  const [highlightJsonInput, setHighlightJsonInput] = useState(false)
+  const [showPasteHint, setShowPasteHint] = useState(false)
+  const jsonInputSectionRef = useRef<HTMLDivElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
+
+  useEffect(() => {
+    if (!highlightJsonInput) return
+    const timer = window.setTimeout(() => setHighlightJsonInput(false), 2500)
+    return () => window.clearTimeout(timer)
+  }, [highlightJsonInput])
+
+  useEffect(() => {
+    if (!showPasteHint) return
+    const timer = window.setTimeout(() => setShowPasteHint(false), 4000)
+    return () => window.clearTimeout(timer)
+  }, [showPasteHint])
 
   const openHelpModal = () => {
     setScrollToPrompt(false)
@@ -40,6 +56,20 @@ export function LandingPage({
   const handleCloseModal = () => {
     setModalOpen(false)
     setScrollToPrompt(false)
+  }
+
+  const focusJsonInput = () => {
+    window.setTimeout(() => {
+      jsonInputSectionRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center' })
+      textareaRef.current?.focus()
+      setHighlightJsonInput(true)
+      setShowPasteHint(true)
+    }, 150)
+  }
+
+  const handleGeneratedProfile = () => {
+    handleCloseModal()
+    focusJsonInput()
   }
 
   return (
@@ -86,7 +116,20 @@ export function LandingPage({
           </div>
         </div>
 
-        <div className="panel-glow mt-10 rounded-lg border border-slate-700/60 bg-slate-900/40 p-4 sm:p-6">
+        <div
+          ref={jsonInputSectionRef}
+          id="json-input-section"
+          className="panel-glow relative mt-10 scroll-mt-24 rounded-lg border border-slate-700/60 bg-slate-900/40 p-4 sm:p-6"
+        >
+          {showPasteHint && (
+            <div
+              className="paste-hint pointer-events-none absolute -top-3 left-1/2 z-10 -translate-x-1/2 whitespace-nowrap rounded-md border border-cyan-500/40 bg-cyan-950/90 px-3 py-1.5 text-xs font-semibold text-cyan-200 shadow-[0_0_16px_rgba(34,211,238,0.2)]"
+              role="status"
+            >
+              Paste your ChatGPT profile JSON here
+            </div>
+          )}
+
           <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
             <label htmlFor="json-input" className="text-sm font-semibold text-slate-300">
               Paste Power Spike Profile JSON
@@ -96,12 +139,17 @@ export function LandingPage({
             </span>
           </div>
           <textarea
+            ref={textareaRef}
             id="json-input"
             value={jsonInput}
             onChange={(e) => onJsonChange(e.target.value)}
             placeholder='{"profileName": "...", "archetype": "...", ...}'
             rows={14}
-            className="w-full resize-y rounded-md border border-slate-700/80 bg-slate-950/80 p-4 font-mono text-sm leading-relaxed text-slate-200 placeholder:text-slate-600 focus:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/20"
+            className={`w-full resize-y rounded-md border bg-slate-950/80 p-4 font-mono text-sm leading-relaxed text-slate-200 placeholder:text-slate-600 focus:border-cyan-500/50 focus:outline-none focus:ring-2 focus:ring-cyan-500/20 ${
+              highlightJsonInput
+                ? 'json-input-highlight border-cyan-400/60'
+                : 'border-slate-700/80'
+            }`}
           />
 
           {error && (
@@ -132,6 +180,7 @@ export function LandingPage({
         onPresetChange={onPresetChange}
         scrollToPrompt={scrollToPrompt}
         onGenerateSample={onGenerateSample}
+        onGeneratedProfile={handleGeneratedProfile}
       />
     </>
   )

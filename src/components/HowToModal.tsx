@@ -19,6 +19,7 @@ interface HowToModalProps {
   onPresetChange: (id: PresetId) => void
   scrollToPrompt?: boolean
   onGenerateSample: () => void
+  onGeneratedProfile: () => void
 }
 
 const TABS: { id: CodexTab; label: string }[] = [
@@ -36,6 +37,7 @@ export function HowToModal({
   onPresetChange,
   scrollToPrompt = false,
   onGenerateSample,
+  onGeneratedProfile,
 }: HowToModalProps) {
   const [activeTab, setActiveTab] = useState<CodexTab>('overview')
   const [copiedPrompt, setCopiedPrompt] = useState(false)
@@ -45,6 +47,31 @@ export function HowToModal({
   const promptRef = useRef<HTMLDivElement>(null)
   const scrollBodyRef = useRef<HTMLDivElement>(null)
   const preset = PROFILE_PRESETS.find((p) => p.id === presetId) ?? PROFILE_PRESETS[0]
+
+  useEffect(() => {
+    if (!open) {
+      setPromptExpanded(false)
+      setJsonOpen(false)
+      return
+    }
+
+    if (scrollToPrompt) {
+      setActiveTab('prompt')
+      return
+    }
+
+    setActiveTab('overview')
+    scrollBodyRef.current?.scrollTo({ top: 0, behavior: 'instant' })
+  }, [open, scrollToPrompt])
+
+  useEffect(() => {
+    if (!open || activeTab !== 'prompt') return
+    const timer = window.setTimeout(() => {
+      scrollBodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+      promptRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+    }, 100)
+    return () => window.clearTimeout(timer)
+  }, [open, activeTab, presetId])
 
   useEffect(() => {
     if (!open) return
@@ -59,24 +86,16 @@ export function HowToModal({
     }
   }, [open, onClose])
 
-  useEffect(() => {
-    if (!open) {
-      setPromptExpanded(false)
-      setJsonOpen(false)
-      return
-    }
+  const handleSelectPreset = (id: PresetId) => {
+    onPresetChange(id)
+    setActiveTab('prompt')
+    setPromptExpanded(false)
+  }
 
-    if (scrollToPrompt) {
-      setActiveTab('prompt')
-      const timer = window.setTimeout(() => {
-        promptRef.current?.scrollIntoView({ behavior: 'smooth', block: 'start' })
-      }, 150)
-      return () => window.clearTimeout(timer)
-    }
-
-    setActiveTab('overview')
-    scrollBodyRef.current?.scrollTo({ top: 0, behavior: 'instant' })
-  }, [open, scrollToPrompt, presetId])
+  const handleGoToPresets = () => {
+    setActiveTab('presets')
+    scrollBodyRef.current?.scrollTo({ top: 0, behavior: 'smooth' })
+  }
 
   if (!open) return null
 
@@ -162,9 +181,9 @@ export function HowToModal({
 
         {/* Tab content */}
         <div ref={scrollBodyRef} className="min-h-0 flex-1 overflow-y-auto px-5 py-5 sm:px-6">
-          {activeTab === 'overview' && <OverviewTab />}
+          {activeTab === 'overview' && <OverviewTab onSelectBuild={handleGoToPresets} />}
           {activeTab === 'presets' && (
-            <PresetsTab presetId={presetId} onPresetChange={onPresetChange} />
+            <PresetsTab presetId={presetId} onSelectPreset={handleSelectPreset} />
           )}
           {activeTab === 'prompt' && (
             <PromptTab
@@ -180,6 +199,8 @@ export function HowToModal({
               onCopyPrompt={handleCopyPrompt}
               onCopyJson={handleCopyJson}
               onGenerateSample={handleGenerateSample}
+              onChangeBuild={() => setActiveTab('presets')}
+              onGeneratedProfile={onGeneratedProfile}
             />
           )}
         </div>
@@ -188,7 +209,7 @@ export function HowToModal({
   )
 }
 
-function OverviewTab() {
+function OverviewTab({ onSelectBuild }: { onSelectBuild: () => void }) {
   return (
     <div className="space-y-8">
       {/* Quick Start — compact horizontal flow */}
@@ -256,16 +277,41 @@ function OverviewTab() {
           <StarPhase label="After ★" detail="Smaller gains" tone="marginal" />
         </div>
       </section>
+
+      {/* Objective CTA — next stage of codex flow */}
+      <section className="codex-objective panel-glow rounded-xl border border-cyan-500/30 bg-gradient-to-br from-cyan-950/30 via-slate-900/80 to-purple-950/40 px-5 py-5 sm:px-6 sm:py-6">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-cyan-400/70">
+          Objective Complete
+        </p>
+        <h4 className="font-display mt-2 text-base font-bold tracking-wide text-white sm:text-lg">
+          Ready to Generate Your Build?
+        </h4>
+        <p className="mt-1.5 text-sm leading-relaxed text-slate-400">
+          Choose a build archetype and generate your Power Spike Profile.
+        </p>
+        <button
+          type="button"
+          onClick={onSelectBuild}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-cyan-400/40 bg-gradient-to-r from-cyan-600 to-purple-600 px-5 py-3.5 font-display text-sm font-semibold uppercase tracking-wider text-white shadow-[0_0_24px_rgba(34,211,238,0.25)] transition hover:from-cyan-500 hover:to-purple-500 hover:shadow-[0_0_32px_rgba(34,211,238,0.35)]"
+        >
+          Select Your Build
+          <span aria-hidden="true">→</span>
+        </button>
+        <p className="mt-3 text-center text-[11px] text-slate-500">
+          Most users should start with:{' '}
+          <span className="font-semibold text-cyan-400/80">Balanced Profile</span>
+        </p>
+      </section>
     </div>
   )
 }
 
 function PresetsTab({
   presetId,
-  onPresetChange,
+  onSelectPreset,
 }: {
   presetId: PresetId
-  onPresetChange: (id: PresetId) => void
+  onSelectPreset: (id: PresetId) => void
 }) {
   return (
     <section>
@@ -283,7 +329,7 @@ function PresetsTab({
             tag={p.tag}
             accent={p.accent}
             selected={p.id === presetId}
-            onClick={() => onPresetChange(p.id)}
+            onClick={() => onSelectPreset(p.id)}
           />
         ))}
       </div>
@@ -304,6 +350,8 @@ function PromptTab({
   onCopyPrompt,
   onCopyJson,
   onGenerateSample,
+  onChangeBuild,
+  onGeneratedProfile,
 }: {
   preset: ProfilePreset
   promptRef: React.RefObject<HTMLDivElement | null>
@@ -317,9 +365,23 @@ function PromptTab({
   onCopyPrompt: () => void
   onCopyJson: () => void
   onGenerateSample: () => void
+  onChangeBuild: () => void
+  onGeneratedProfile: () => void
 }) {
   return (
     <div className="space-y-6">
+      <div className="flex flex-wrap items-center justify-between gap-3 rounded-lg border border-slate-700/50 bg-slate-900/50 px-3 py-2.5">
+        <div>
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-slate-500">
+            Selected Build
+          </p>
+          <p className="font-display text-sm font-semibold text-white">[{preset.name}]</p>
+        </div>
+        <Button variant="ghost" onClick={onChangeBuild} className="px-3 py-1.5 text-xs">
+          Change Build
+        </Button>
+      </div>
+
       <section ref={promptRef} id="prompt-section" className="scroll-mt-2">
         <div className="flex flex-wrap items-center justify-between gap-2">
           <SectionHeading>{preset.promptTitle}</SectionHeading>
@@ -368,6 +430,31 @@ function PromptTab({
             </pre>
           </div>
         )}
+      </section>
+
+      <section className="codex-objective panel-glow rounded-xl border border-cyan-500/30 bg-gradient-to-br from-cyan-950/30 via-slate-900/80 to-purple-950/40 px-5 py-5 sm:px-6 sm:py-6">
+        <p className="text-[10px] font-semibold uppercase tracking-[0.3em] text-cyan-400/70">
+          Objective
+        </p>
+        <h4 className="font-display mt-2 text-base font-bold tracking-wide text-white sm:text-lg">
+          Generate Your Profile
+        </h4>
+        <p className="mt-1.5 text-sm leading-relaxed text-slate-400">
+          Take this prompt to ChatGPT, generate your profile JSON, then return here to render your
+          build.
+        </p>
+        <button
+          type="button"
+          onClick={onGeneratedProfile}
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-lg border border-cyan-400/40 bg-gradient-to-r from-cyan-600 to-purple-600 px-5 py-3.5 font-display text-sm font-semibold uppercase tracking-wider text-white shadow-[0_0_24px_rgba(34,211,238,0.25)] transition hover:from-cyan-500 hover:to-purple-500 hover:shadow-[0_0_32px_rgba(34,211,238,0.35)]"
+        >
+          I&apos;ve Generated My Profile
+          <span aria-hidden="true">→</span>
+        </button>
+        <p className="mt-3 text-center text-[11px] text-slate-500">
+          Next: Paste the JSON response into the box below and click{' '}
+          <span className="font-semibold text-slate-400">Render Profile</span>.
+        </p>
       </section>
     </div>
   )
